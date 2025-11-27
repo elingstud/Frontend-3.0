@@ -99,10 +99,18 @@ body {
     margin: 5px;
     font-size: 14px;
 }
-
-.fire { background: #ff5c5c; }
-.water { background: #4da6ff; }
-.grass { background: #66cc66; }
+.type-filter {
+    margin: 15px auto 0 auto;  /* centrerar rutan horisontellt */
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 16px;
+    border: 2px solid #FFCB05;
+    background: white;
+    color: #2A75BB;
+    width: 200px;              /* fast bredd */
+    text-align: center;
+    display: block;            /* gör att margin auto funkar */
+}
 
 
 /* Gör att footern trycks längst ner */

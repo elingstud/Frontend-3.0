@@ -1,65 +1,91 @@
-// Referenser till HTML-element
-const container = document.getElementById('pokemonContainer');
-const searchInput = document.querySelector('.search');
+// =========================
+// SÖKFUNKTION
+// =========================
 
-// Antal Pokémon att hämta
-const limit = 20;
+// Hitta sökrutan
+const searchInput = document.getElementById("search");
+const resultBox = document.getElementById("pokemon-result");
 
-// Funktion för att hämta Pokémon-lista
-async function fetchPokemon() {
-    try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`);
-        const data = await response.json();
-        const results = data.results;
+// Lyssna på när användaren skriver
+searchInput.addEventListener("keyup", async function (event) {
+    const name = event.target.value.toLowerCase().trim();
 
-        // Skapa kort för varje Pokémon
-        results.forEach(pokemon => {
-            createPokemonCard(pokemon);
-        });
-    } catch (error) {
-        container.textContent = 'Oj, något gick fel!'; // Felhantering
-        console.error(error);
+    // Om tomt fält – rensa rutan
+    if (name === "") {
+        resultBox.innerHTML = "";
+        return;
     }
-}
 
-// Funktion som skapar ett Pokémon-kort
-async function createPokemonCard(pokemon) {
     try {
-        // Hämta detaljerad data för bilden
-        const res = await fetch(pokemon.url);
-        const details = await res.json();
+        // Hämta från PokéAPI
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
 
-        // Skapa kort
-        const card = document.createElement('div');
-        card.classList.add('pokemon-card');
+        if (!response.ok) {
+            resultBox.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>";
+            return;
+        }
 
-        // Fyll kortet med namn och bild
-        card.innerHTML = `
-            <h3>${details.name}</h3>
-            <img src="${details.sprites.front_default}" alt="${details.name}">
+        const data = await response.json();
+
+        // Visa Pokémon-info
+        resultBox.innerHTML = `
+            <div style="margin-top:20px; color:white; text-align:center;">
+                <h2 style="font-family:'Press Start 2P'; color:#FFCB05;">${data.name.toUpperCase()}</h2>
+                <img src="${data.sprites.front_default}" alt="${data.name}">
+                <p>Typ: ${data.types.map(t => t.type.name).join(", ")}</p>
+            </div>
         `;
 
-        container.appendChild(card);
     } catch (error) {
         console.error(error);
+        resultBox.innerHTML = "<p style='color:white;'>Fel vid hämtning.</p>";
     }
-}
-
-// Filtrering med sökrutan
-searchInput.addEventListener('input', () => {
-    const searchValue = searchInput.value.toLowerCase();
-    const cards = container.querySelectorAll('.pokemon-card');
-
-    cards.forEach(card => {
-        const name = card.querySelector('h3').textContent.toLowerCase();
-        if(name.includes(searchValue)) {
-            card.style.display = 'inline-block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
 });
 
-// Starta appen
-fetchPokemon();
 
+// =========================
+// FILTERFUNKTION (Pokémon-typ)
+// =========================
+
+// Hitta dropdown och resultatbox
+const typeFilter = document.getElementById("type-filter");
+const typeResults = document.getElementById("type-results");
+
+// Lyssna när användaren väljer typ
+typeFilter.addEventListener("change", async function () {
+    const type = typeFilter.value;
+
+    // Rensa tidigare resultat
+    typeResults.innerHTML = "";
+
+    // Om "ingen typ" vald, avsluta
+    if (type === "") return;
+
+    try {
+        // Hämta alla Pokémon av vald typ
+        const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+        const data = await response.json();
+
+        // Vi tar bara de första 20 för snabbhet
+        const pokemonList = data.pokemon.slice(0, 20);
+
+        // Hämta info för varje Pokémon (för att få bild)
+        for (const entry of pokemonList) {
+            const p = await fetch(entry.pokemon.url);
+            const details = await p.json();
+
+            typeResults.innerHTML += `
+                <div style="display:inline-block; margin:15px; text-align:center;">
+                    <img src="${details.sprites.front_default}" alt="${details.name}">
+                    <p style="color:white; font-family:'Press Start 2P'; font-size:12px;">
+                        ${details.name}
+                    </p>
+                </div>
+            `;
+        }
+
+    } catch (error) {
+        console.error(error);
+        typeResults.innerHTML = "<p style='color:white;'>Kunde inte hämta Pokémon.</p>";
+    }
+});

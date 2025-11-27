@@ -7,7 +7,6 @@
     <title>Pokémon</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<script src="script.js"></script>
 
 <body>
 
@@ -36,14 +35,39 @@
     <img src="img/International_Pokémon_logo.svg.png" height="198" width="538"/></div>
 
 <!-- Sökruta -->
-<input class="search" type="text" placeholder="Sök Pokémon...">
-    
+<input id="search" class="search" type="text" placeholder="Sök Pokémon...">
+    <div id="pokemon-result"></div>
+
 </div>
+<select id="type-filter" class="type-filter">
+    <option value="">Filtrera på typ...</option>
+    <option value="fire">Fire</option>
+    <option value="water">Water</option>
+    <option value="grass">Grass</option>
+    <option value="electric">Electric</option>
+    <option value="normal">Normal</option>
+    <option value="bug">Bug</option>
+    <option value="poison">Poison</option>
+    <option value="fairy">Fairy</option>
+    <option value="psychic">Psychic</option>
+    <option value="rock">Rock</option>
+    <option value="ground">Ground</option>
+    <option value="flying">Flying</option>
+    <option value="ice">Ice</option>
+    <option value="dragon">Dragon</option>
+    <option value="ghost">Ghost</option>
+    <option value="dark">Dark</option>
+    <option value="steel">Steel</option>
+    <option value="fighting">Fighting</option>
+</select>
+
+<div id="type-results"></div>
 
 <footer class="footer">
     <p>© 2025 Elins Pokémon Hemsida – </p>
 </footer>
 
+<script src="js/app.js"></script>
 
 </body>
 </html>
