@@ -50,13 +50,24 @@ header {
 body {
     margin-top: 80px;  /* Header höjd + lite luft */
 }
+/* Container runt allt innehåll för att centrera det */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* centrerar horisontellt */
+    width: 100%;
+}
+
 
 /* Liten text ovanför loggan */
-.small-text {
+.hero h1 {
+    font-family: 'Press Start 2P', cursive;
     color: #FFCB05;
-    font-size: 30px;
-    margin-bottom: 10px;
-    font-weight: bold;
+    text-shadow:
+            -2px -2px 0 #2A75BB,
+            2px -2px 0 #2A75BB,
+            -2px  2px 0 #2A75BB,
+            2px  2px 0 #2A75BB; /* blå outline */
 }
 
 /* Logga */
@@ -76,3 +87,40 @@ body {
     background-color: #FFF;
     color: #000;
 }
+
+.badges {
+    margin-top: 20px;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 12px;
+    color: white;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.fire { background: #ff5c5c; }
+.water { background: #4da6ff; }
+.grass { background: #66cc66; }
+
+
+/* Gör att footern trycks längst ner */
+body {
+    min-height: 100vh;          /* sidan blir minst hela höjden */
+    display: flex;
+    flex-direction: column;     /* elementen staplas lodrätt */
+}
+
+/* Själva footern */
+.footer {
+    margin-top: auto;           /* trycker ner footern längst ner */
+    text-align: center;
+    padding: 20px;
+    background: #2A75BB;        /* Pokémon blå */
+    color: white;
+    font-family: 'Press Start 2P', sans-serif; /* Pokémon-stil */
+    font-size: 14px;
+    border-top: 4px solid #FFCB05; /* Pokémon gul kant */
+}
+
