@@ -2,90 +2,106 @@
 // SÖKFUNKTION
 // =========================
 
-// Hitta sökrutan
-const searchInput = document.getElementById("search");
-const resultBox = document.getElementById("pokemon-result");
+// Hitta sökrutan och rutan där resultat visas
+const sokRuta = document.getElementById("search");
+const resultatRuta = document.getElementById("pokemon-result");
 
-// Lyssna på när användaren skriver
-searchInput.addEventListener("keyup", async function (event) {
-    const name = event.target.value.toLowerCase().trim();
+// =========================
+// FUNKTION FÖR SÖK
+// =========================
+async function sokPokemon(event) {
+    // Ta texten som användaren skrev
+    const namn = event.target.value.toLowerCase().trim();
 
-    // Om tomt fält – rensa rutan
-    if (name === "") {
-        resultBox.innerHTML = "";
+    // Om rutan är tom → rensa resultatet och sluta
+    if (namn === "") {
+        resultatRuta.innerHTML = "";
         return;
     }
 
     try {
-        // Hämta från PokéAPI
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        // Hämta Pokémon-data från PokéAPI
+        const svar = await fetch(`https://pokeapi.co/api/v2/pokemon/${namn}`);
 
-        if (!response.ok) {
-            resultBox.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>";
+        // Om inget hittades → visa meddelande
+        if (!svar.ok) {
+            resultatRuta.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>";
             return;
         }
 
-        const data = await response.json();
+        // Öppnar det vi fått från API:et och gör det till något vi kan använda i koden
+        const data = await svar.json();
 
-        // Visa Pokémon-info
-        resultBox.innerHTML = `
-            <div style="margin-top:20px; color:white; text-align:center;">
-                <h2 style="font-family:'Press Start 2P'; color:#FFCB05;">${data.name.toUpperCase()}</h2>
-                <img src="${data.sprites.front_default}" alt="${data.name}">
-                <p>Typ: ${data.types.map(t => t.type.name).join(", ")}</p>
-            </div>
-        `;
+        // Visa namn, bild och typ av Pokémon
+        resultatRuta.innerHTML = `
+      <div style="margin-top:20px; color:white; text-align:center;">
+        <h2 style="font-family:'Press Start 2P'; color:#FFCB05;">${data.name.toUpperCase()}</h2>
+        <img src="${data.sprites.front_default}" alt="${data.name}">
+        <p>Typ: ${data.types.map(t => t.type.name).join(", ")}</p>
+      </div>
+    `;
 
-    } catch (error) {
-        console.error(error);
-        resultBox.innerHTML = "<p style='color:white;'>Fel vid hämtning.</p>";
+    } catch (fel) {
+        // Om något går fel (t.ex. nätverksproblem)
+        console.error(fel);
+        resultatRuta.innerHTML = "<p style='color:white;'>Fel vid hämtning.</p>";
     }
-});
+}
+
+// Koppla funktionen till sökrutan
+sokRuta.addEventListener("keyup", sokPokemon);
+
 
 
 // =========================
 // FILTERFUNKTION (Pokémon-typ)
 // =========================
 
-// Hitta dropdown och resultatbox
-const typeFilter = document.getElementById("type-filter");
-const typeResults = document.getElementById("type-results");
+// Hitta dropdown-menyn och rutan för resultat
+const typVal = document.getElementById("type-filter");
+const typResultat = document.getElementById("type-results");
 
-// Lyssna när användaren väljer typ
-typeFilter.addEventListener("change", async function () {
-    const type = typeFilter.value;
+// =========================
+// NAMNGIVEN FUNKTION FÖR FILTER
+// =========================
+async function filtreraTyp() {
+    const valdTyp = typVal.value;
 
-    // Rensa tidigare resultat
-    typeResults.innerHTML = "";
+    // Rensa resultat varje gång
+    typResultat.innerHTML = "";
 
-    // Om "ingen typ" vald, avsluta
-    if (type === "") return;
+    // Om ingen typ är vald → sluta
+    if (valdTyp === "") return;
 
     try {
-        // Hämta alla Pokémon av vald typ
-        const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
-        const data = await response.json();
+        // Hämta alla Pokémon av den valda typen
+        const svar = await fetch(`https://pokeapi.co/api/v2/type/${valdTyp}`);
+        const data = await svar.json();
 
-        // Vi tar bara de första 20 för snabbhet
-        const pokemonList = data.pokemon.slice(0, 20);
+        // Ta bara de första 20 Pokémon för snabbhet
+        const listaPokemon = data.pokemon.slice(0, 20);
 
-        // Hämta info för varje Pokémon (för att få bild)
-        for (const entry of pokemonList) {
-            const p = await fetch(entry.pokemon.url);
-            const details = await p.json();
+        // Hämta detaljer för varje Pokémon
+        for (const post of listaPokemon) {
+            const p = await fetch(post.pokemon.url);
+            const detaljer = await p.json();
 
-            typeResults.innerHTML += `
-                <div style="display:inline-block; margin:15px; text-align:center;">
-                    <img src="${details.sprites.front_default}" alt="${details.name}">
-                    <p style="color:white; font-family:'Press Start 2P'; font-size:12px;">
-                        ${details.name}
-                    </p>
-                </div>
-            `;
+            // Visa bild och namn
+            typResultat.innerHTML += `
+        <div style="display:inline-block; margin:15px; text-align:center;">
+          <img src="${detaljer.sprites.front_default}" alt="${detaljer.name}">
+          <p style="color:white; font-family:'Press Start 2P'; font-size:12px;">
+            ${detaljer.name}
+          </p>
+        </div>
+      `;
         }
 
-    } catch (error) {
-        console.error(error);
-        typeResults.innerHTML = "<p style='color:white;'>Kunde inte hämta Pokémon.</p>";
+    } catch (fel) {
+        console.error(fel);
+        typResultat.innerHTML = "<p style='color:white;'>Kunde inte hämta Pokémon.</p>";
     }
-});
+}
+
+// Koppla funktionen till dropdown-menyn
+typVal.addEventListener("change", filtreraTyp);
