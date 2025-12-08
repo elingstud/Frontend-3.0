@@ -1,134 +1,99 @@
+/* Bakgrund + textstil */
 body {
-    background-color: #3D7DCA;   /* Pokémon-blå bakgrund */
-    text-align: center;           /* Centrerar allt horisontellt */
-    margin-top: 50px;             /* Flyttar ner innehållet från toppen */
+    background-color: #3D7DCA;
+    text-align: center;
+    margin-top: 50px;
     font-family: Arial, sans-serif;
 }
-/* =======================================
-   Header och meny
-   ======================================= */
+
+/* HEADER / MENY */
 header {
-    width: 100%;                  /* Tar hela sidans bredd */
-    background-color: #FFCB05;    /* Gul bakgrund som Pokémon-stil */
-    padding: 10px 0;              /* Lite luft ovan/under */
-    position: fixed;              /* Headern stannar kvar när man scrollar */
+    width: 100%;
+    background-color: #FFCB05;
+    padding: 10px 0;
+    position: fixed; /* Header följer med när man scrollar */
     top: 0;
     left: 0;
-    z-index: 1000;                /* Ligger över annat innehåll */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Lite skugga */
+    z-index: 1000; /* Så den ligger över allt */
 }
 
-/* Meny-listan */
+/* Horisontell meny */
 .menu ul {
-    list-style: none;             /* Tar bort punkter */
-    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
     padding: 0;
-    display: flex;                /* Visar menyn horisontellt */
-    justify-content: center;      /* Centrerar menyn */
 }
 
-/* Meny-länkar */
+/* Mellanrum mellan menylänkar */
 .menu li {
-    margin: 0 20px;               /* Avstånd mellan länkarna */
+    margin: 0 20px;
 }
 
+/* Stilen på menylänkarna */
 .menu a {
-    text-decoration: none;        /* Tar bort understrykning */
-    color: #3D7DCA;               /* Blå text */
+    text-decoration: none;
+    color: #3D7DCA;
     font-weight: bold;
     font-size: 18px;
-    cursor: pointer;              /* Visar att det går att klicka */
-    transition: color 0.3s;       /* Smooth hover */
 }
 
 /* Hover-effekt */
 .menu a:hover {
-    color: #FF0000;               /* Röd när man hovrar */
+    color: #FF0000;
 }
 
-/* Justerar sidan så loggan och sökrutan inte hamnar bakom headern */
+/* Extra utrymme pga fixed header */
 body {
-    margin-top: 80px;  /* Header höjd + lite luft */
+    margin-top: 80px;
 }
-/* Container runt allt innehåll för att centrera det */
+
+/* Centrerar allt innehåll */
 .main-content {
     display: flex;
     flex-direction: column;
-    align-items: center;   /* centrerar horisontellt */
-    width: 100%;
+    align-items: center;
 }
 
-
-/* Liten text ovanför loggan */
+/* Introtext */
 .hero h1 {
-    font-family: 'Press Start 2P', cursive;
     color: #FFCB05;
     text-shadow:
             -2px -2px 0 #2A75BB,
             2px -2px 0 #2A75BB,
             -2px  2px 0 #2A75BB,
-            2px  2px 0 #2A75BB; /* blå outline */
+            2px  2px 0 #2A75BB;
 }
 
-/* Logga */
-.logo-img {
-    max-width: 80%;              /* Anpassar storleken efter skärmen */
-    height: auto;                /* Behåller proportionerna */
-    margin-bottom: 30px;         /* Avstånd under loggan */
-}
-
-/* Sökrutan */
+/* Sökruta */
 .search {
     width: 300px;
     padding: 10px 15px;
     border-radius: 20px;
     border: 2px solid #FFCB05;
-    font-size: 16px;
-    background-color: #FFF;
-    color: #000;
 }
 
-.badges {
-    margin-top: 20px;
-}
-
-.badge {
-    padding: 5px 12px;
-    border-radius: 12px;
-    color: white;
-    margin: 5px;
-    font-size: 14px;
-}
+/* Dropdown */
 .type-filter {
-    margin: 15px auto 0 auto;  /* centrerar rutan horisontellt */
+    margin: 15px auto 0 auto;
     padding: 10px 15px;
     border-radius: 20px;
     font-size: 16px;
     border: 2px solid #FFCB05;
     background: white;
-    color: #2A75BB;
-    width: 200px;              /* fast bredd */
-    text-align: center;
-    display: block;            /* gör att margin auto funkar */
+    width: 200px;
 }
 
-
-/* Gör att footern trycks längst ner */
+/* FOOTER längst ner */
 body {
-    min-height: 100vh;          /* sidan blir minst hela höjden */
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;     /* elementen staplas lodrätt */
+    flex-direction: column;
 }
 
-/* Själva footern */
 .footer {
-    margin-top: auto;           /* trycker ner footern längst ner */
-    text-align: center;
-    padding: 20px;
-    background: #2A75BB;        /* Pokémon blå */
+    margin-top: auto;
+    background: #2A75BB;
     color: white;
-    font-family: 'Press Start 2P', sans-serif; /* Pokémon-stil */
-    font-size: 14px;
-    border-top: 4px solid #FFCB05; /* Pokémon gul kant */
+    padding: 20px;
 }
-

@@ -5,15 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pokémon</title>
+
+    <!-- Länkar till min CSS-fil -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<!-- Header med meny -->
+<!-- Header med fast meny -->
 <header>
     <nav class="menu">
         <ul>
+            <!-- Menylänkarna (gör ingenting ännu) (placeholder) -->
             <li><a href="#">Hem</a></li>
             <li><a href="#">Mina Pokémons</a></li>
             <li><a href="#">Bibliotek</a></li>
@@ -21,25 +24,29 @@
         </ul>
     </nav>
 </header>
+
 <div class="main-content">
 
-<!-- Liten text över loggan -->
-<section class="hero">
-    <h1>Välkommen till Pokédex!</h1>
-    <p>Här kan du söka efter alla Pokémon och lära dig mer om dem.</p>
-</section>
+    <!-- Introdel över loggan -->
+    <section class="hero">
+        <h1>Välkommen till Pokédex!</h1>
+        <p>Här kan du söka efter alla Pokémon och lära dig mer om dem.</p>
+    </section>
 
-<!-- Pokémon-logga som bild -->
-<div class="logo">
+    <!-- Pokémonlogga, infogad bild -->
+    <div class="logo">
+        <img src="img/International_Pokémon_logo.svg.png" height="198" width="538"/>
+    </div>
 
-    <img src="img/International_Pokémon_logo.svg.png" height="198" width="538"/></div>
+    <!-- Sökrutan för att hitta en specifik Pokémon -->
+    <input id="search" class="search" type="text" placeholder="Sök Pokémon...">
 
-<!-- Sökruta -->
-<input id="search" class="search" type="text" placeholder="Sök Pokémon...">
+    <!-- Här visas resultatet från sökningen -->
     <div id="pokemon-result"></div>
 
 </div>
-<!-- Dropdownmeny (select) för att filtrera Pokémon efter typ. value="" betyder inget val/alla typer.-->
+
+<!-- Dropdown för att filtrera Pokémon efter typ -->
 <select id="type-filter" class="type-filter">
     <option value="">Filtrera på typ...</option>
     <option value="fire">Fire</option>
@@ -62,16 +69,16 @@
     <option value="fighting">Fighting</option>
 </select>
 
+<!-- Här kommer listan med Pokémon som har den valda typen -->
 <div id="type-results"></div>
 
-<!-- Footer med text -->
+<!-- Enkel footer med text -->
 <footer class="footer">
     <p>© 2025 Elins Pokémon Hemsida </p>
 </footer>
 
-<!-- Hämta js, innan stängande bodytag -->
+<!-- Länkar in min JavaScript-fil -->
 <script src="js/app.js"></script>
 
 </body>
 </html>
-

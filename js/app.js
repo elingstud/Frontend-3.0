@@ -1,107 +1,67 @@
-// =========================
-// SÖKFUNKTION
-// =========================
-
-// Hitta sökrutan och rutan där resultat visas
+// Hämta sökruta och ruta för sökresultat
 const sokRuta = document.getElementById("search");
 const resultatRuta = document.getElementById("pokemon-result");
 
-// =========================
-// FUNKTION FÖR SÖK
-// =========================
+// Hämta dropdown och ruta för typfilter
+const typVal = document.getElementById("type-filter");
+const typRuta = document.getElementById("type-results");
+
+// Funktion för att söka Pokémon
 async function sokPokemon(event) {
-    // Ta texten som användaren skrev
-    const namn = event.target.value.toLowerCase().trim();
+    const namn = event.target.value.toLowerCase().trim(); // Ta text från input
+    if (namn === "") { resultatRuta.innerHTML = ""; return; }
 
-    // Om rutan är tom → rensa resultatet och sluta
-    if (namn === "") {
-        resultatRuta.innerHTML = "";
-        return;
-    }
+    const svar = await fetch(`https://pokeapi.co/api/v2/pokemon/${namn}`);
+    if (!svar.ok) { resultatRuta.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>"; return; }
 
-    try {
-        // Hämta Pokémon-data från PokéAPI
-        const svar = await fetch(`https://pokeapi.co/api/v2/pokemon/${namn}`);
-
-        // Om inget hittades → visa meddelande
-        if (!svar.ok) {
-            resultatRuta.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>";
-            return;
-        }
-
-        // Öppnar det vi fått från API:et och gör det till något vi kan använda i koden
-        const data = await svar.json();
-
-        // Visa namn, bild och typ av Pokémon
-        resultatRuta.innerHTML = `
-      <div style="margin-top:20px; color:white; text-align:center;">
-        <h2 style="font-family:'Press Start 2P'; color:#FFCB05;">${data.name.toUpperCase()}</h2>
-        <img src="${data.sprites.front_default}" alt="${data.name}">
-        <p>Typ: ${data.types.map(t => t.type.name).join(", ")}</p>
-      </div>
-    `;
-
-    } catch (fel) {
-        // Om något går fel (t.ex. nätverksproblem)
-        console.error(fel);
-        resultatRuta.innerHTML = "<p style='color:white;'>Fel vid hämtning.</p>";
-    }
+    const data = await svar.json(); // Konvertera JSON
+    visaPokemon(data, resultatRuta); // Visa resultatet i resultatRuta
 }
 
-// Koppla funktionen till sökrutan
+// Funktion som visar Pokémon i en ruta
+function visaPokemon(pokemonData, ruta) {
+    ruta.innerHTML = `
+        <div style="margin-top:20px; color:white; text-align:center;">
+            <h2 style="font-family:'Press Start 2P'; color:#FFCB05;">
+                ${pokemonData.name.toUpperCase()}
+            </h2>
+            <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
+            <p>Typ: ${pokemonData.types.map(t => t.type.name).join(", ")}</p>
+        </div>
+    `;
+}
+
+// Lyssna på när man skriver i sökrutan
 sokRuta.addEventListener("keyup", sokPokemon);
 
-
-
-// =========================
-// FILTERFUNKTION (Pokémon-typ)
-// =========================
-
-// Hitta dropdown-menyn och rutan för resultat
-const typVal = document.getElementById("type-filter");
-const typResultat = document.getElementById("type-results");
-
-// =========================
-// NAMNGIVEN FUNKTION FÖR FILTER
-// =========================
+// Funktion för att filtrera Pokémon efter typ
 async function filtreraTyp() {
     const valdTyp = typVal.value;
-
-    // Rensa resultat varje gång
-    typResultat.innerHTML = "";
-
-    // Om ingen typ är vald → sluta
+    typRuta.innerHTML = "";
     if (valdTyp === "") return;
 
-    try {
-        // Hämta alla Pokémon av den valda typen
-        const svar = await fetch(`https://pokeapi.co/api/v2/type/${valdTyp}`);
-        const data = await svar.json();
+    const svar = await fetch(`https://pokeapi.co/api/v2/type/${valdTyp}`);
+    const data = await svar.json();
+    const listaPokemon = data.pokemon.slice(0, 20);
 
-        // Ta bara de första 20 Pokémon för snabbhet
-        const listaPokemon = data.pokemon.slice(0, 20);
-
-        // Hämta detaljer för varje Pokémon
-        for (const post of listaPokemon) {
-            const p = await fetch(post.pokemon.url);
-            const detaljer = await p.json();
-
-            // Visa bild och namn
-            typResultat.innerHTML += `
-        <div style="display:inline-block; margin:15px; text-align:center;">
-          <img src="${detaljer.sprites.front_default}" alt="${detaljer.name}">
-          <p style="color:white; font-family:'Press Start 2P'; font-size:12px;">
-            ${detaljer.name}
-          </p>
-        </div>
-      `;
-        }
-
-    } catch (fel) {
-        console.error(fel);
-        typResultat.innerHTML = "<p style='color:white;'>Kunde inte hämta Pokémon.</p>";
-    }
+    listaPokemon.forEach(async post => {
+        const p = await fetch(post.pokemon.url);
+        const detaljer = await p.json();
+        visaPokemonDetaljer(detaljer);
+    });
 }
 
-// Koppla funktionen till dropdown-menyn
+// Funktion som visar varje Pokémon i typRuta
+function visaPokemonDetaljer(pokemon) {
+    typRuta.innerHTML += `
+        <div style="display:inline-block; margin:15px; text-align:center;">
+            <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+            <p style="color:white; font-family:'Press Start 2P'; font-size:12px;">
+                ${pokemon.name}
+            </p>
+        </div>
+    `;
+}
+
+// Lyssna på när man väljer en typ i dropdown
 typVal.addEventListener("change", filtreraTyp);
