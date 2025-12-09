@@ -40,7 +40,9 @@ function visaPokemon(pokemonData, ruta) {
 sokRuta.addEventListener("keyup", sokPokemon);
 
 // Funktion för att filtrera Pokémon efter typ.
-//Tar reda på vilken pokemon användaren valde i dropdown, går till API hämtar alla pokemon av den typen. Visar 20 st.
+// INPUT: vald typ från dropdown
+// PROCESS: hämtar 20 st Pokémon av den typen från API, hämta detaljer för varje Pokémon
+// OUTPUT: visa Pokémon i typRuta
 async function filtreraTyp() {
     const valdTyp = typVal.value;
     typRuta.innerHTML = "";
