@@ -1,4 +1,4 @@
-// Hämta sökruta och ruta för sökresultat
+// Hämta sökruta och ruta för sökresultat från html
 const sokRuta = document.getElementById("search");
 const resultatRuta = document.getElementById("pokemon-result");
 
@@ -6,19 +6,24 @@ const resultatRuta = document.getElementById("pokemon-result");
 const typVal = document.getElementById("type-filter");
 const typRuta = document.getElementById("type-results");
 
-// Funktion för att söka Pokémon
+// Funktion som körs varje gång användaren skriver i sökrutan.
+// Här hämtar vi texten från input, gör den till små bokstäver och tar bort onödiga mellanslag.
+// Sedan hämtar vi data från PokéAPI med fetch, där async/await gör att koden väntar på svaret.
+// Om Pokémon hittas konverterar vi JSON-datan till ett JavaScript-objekt och skickar det vidare för att visas.
 async function sokPokemon(event) {
-    const namn = event.target.value.toLowerCase().trim(); // Ta text från input
+
+    const namn = event.target.value.toLowerCase().trim();
     if (namn === "") { resultatRuta.innerHTML = ""; return; }
 
     const svar = await fetch(`https://pokeapi.co/api/v2/pokemon/${namn}`);
     if (!svar.ok) { resultatRuta.innerHTML = "<p style='color:white;'>Ingen Pokémon hittades.</p>"; return; }
 
-    const data = await svar.json(); // Konvertera JSON
-    visaPokemon(data, resultatRuta); // Visa resultatet i resultatRuta
+    const data = await svar.json();
+    visaPokemon(data, resultatRuta);
 }
 
-// Funktion som visar Pokémon i en ruta
+
+// Funktion som visar Pokémon med namn, bild och typ i en ruta
 function visaPokemon(pokemonData, ruta) {
     ruta.innerHTML = `
         <div style="margin-top:20px; color:white; text-align:center;">
@@ -31,10 +36,11 @@ function visaPokemon(pokemonData, ruta) {
     `;
 }
 
-// Lyssna på när man skriver i sökrutan
+// Lyssna på när man skriver i sökrutan och sök pokemon
 sokRuta.addEventListener("keyup", sokPokemon);
 
-// Funktion för att filtrera Pokémon efter typ
+// Funktion för att filtrera Pokémon efter typ.
+//Tar reda på vilken pokemon användaren valde i dropdown, går till API hämtar alla pokemon av den typen. Visar 20 st.
 async function filtreraTyp() {
     const valdTyp = typVal.value;
     typRuta.innerHTML = "";
@@ -44,6 +50,7 @@ async function filtreraTyp() {
     const data = await svar.json();
     const listaPokemon = data.pokemon.slice(0, 20);
 
+    // forEach för varje pokemon i listan, hämtar bild namn och typ
     listaPokemon.forEach(async post => {
         const p = await fetch(post.pokemon.url);
         const detaljer = await p.json();
@@ -63,5 +70,5 @@ function visaPokemonDetaljer(pokemon) {
     `;
 }
 
-// Lyssna på när man väljer en typ i dropdown
+// Lyssna på när man väljer eller byter en typ i dropdown
 typVal.addEventListener("change", filtreraTyp);
